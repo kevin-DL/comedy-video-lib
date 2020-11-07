@@ -2,31 +2,43 @@
   <div class="container">
     <div>
       <Logo />
-      <h1 class="title">comedy-video</h1>
-      <div class="links">
-        <a
-          href="https://nuxtjs.org/"
-          target="_blank"
-          rel="noopener noreferrer"
-          class="button--green"
-        >
-          Documentation
-        </a>
-        <a
-          href="https://github.com/nuxt/nuxt.js"
-          target="_blank"
-          rel="noopener noreferrer"
-          class="button--grey"
-        >
-          GitHub
-        </a>
+      <h1 class="title">Comedy Video</h1>
+      <label
+        for="email"
+        class="block text-sm font-medium leading-5 text-gray-700"
+        >Email</label
+      >
+      <div class="mt-1 relative rounded-md shadow-sm">
+        <input
+          id="email"
+          v-model="email"
+          class="form-input block w-full sm:text-sm sm:leading-5"
+          placeholder="you@example.com"
+        />
       </div>
+      <button @click="login">Login</button>
     </div>
   </div>
 </template>
 
 <script>
-export default {}
+export default {
+  name: 'Index',
+  data() {
+    return {
+      email: '',
+      loading: false,
+    }
+  },
+  methods: {
+    async login() {
+      const token = await this.$magic.auth.loginWithMagicLink({
+        email: this.email,
+      })
+      this.$store.commit('auth/setToken', token)
+    },
+  },
+}
 </script>
 
 <style>

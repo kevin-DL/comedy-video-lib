@@ -3,6 +3,17 @@
     <Nuxt />
   </div>
 </template>
+<script>
+export default {
+  name: 'Defaultlayout',
+  async mounted() {
+    const loggedIn = await this.$magic.user.isLoggedIn()
+    const token = await this.$magic.user.getIdToken()
+    this.$store.commit('auth/setToken', token)
+    this.$store.commit('auth/setLoggedIn', loggedIn)
+  },
+}
+</script>
 
 <style>
 html {
