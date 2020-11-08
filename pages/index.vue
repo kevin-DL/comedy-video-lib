@@ -30,11 +30,33 @@
     </div>
     <div class="px-2">
       <h4 class="mb-2">Popular Videos</h4>
-      <ul
-        class="space-y-12 sm:grid sm:grid-cols-2 sm:gap-x-6 sm:gap-y-12 sm:space-y-0 lg:grid-cols-3 lg:gap-x-8 xxl:grid-cols-4 xxl:gap-x-8"
-      >
-        <li v-for="i in [1, 2, 3, 4]" :key="i">
-          <div class="space-y-4">
+      <splide :options="splideOptions">
+        <splide-slide
+          v-for="i in [
+            1,
+            2,
+            3,
+            4,
+            5,
+            6,
+            7,
+            8,
+            9,
+            10,
+            11,
+            12,
+            13,
+            14,
+            15,
+            16,
+            17,
+            18,
+            19,
+            20,
+          ]"
+          :key="i"
+        >
+          <div class="space-y-4 mx-2">
             <div class="relative pb-2/3">
               <img
                 class="absolute object-cover h-full w-full shadow-lg rounded-lg"
@@ -88,8 +110,8 @@
               </ul>
             </div>
           </div>
-        </li>
-      </ul>
+        </splide-slide>
+      </splide>
       <h4 class="mt-4 mb-2">New videos</h4>
       <ul
         class="mb-2 space-y-4 sm:grid sm:grid-cols-2 sm:gap-6 sm:space-y-0 lg:grid-cols-3 lg:gap-8 xxl:grid-cols-6 xxl:gap-10"
@@ -158,12 +180,46 @@
 </template>
 
 <script>
+import '@splidejs/splide/dist/css/themes/splide-skyblue.min.css'
 export default {
   name: 'Index',
   data() {
     return {
       email: '',
       loading: false,
+      splideOptions: {
+        lazyLoad: 'nearby',
+        cover: true,
+        type: 'loop',
+        // padding: {
+        //   right: '5rem',
+        //   left: '5rem',
+        // },
+        perPage: 4,
+        // rewind: false,
+        breakpoints: {
+          640: {
+            perPage: 1,
+            gap: '1rem',
+          },
+          768: {
+            perPage: 1,
+            gap: '1rem',
+          },
+          1024: {
+            perPage: 2,
+            gap: '1rem',
+          },
+          1280: {
+            perPage: 2,
+            gap: '1rem',
+          },
+          1920: {
+            perPage: 3,
+            gap: '1rem',
+          },
+        },
+      },
     }
   },
   methods: {},
