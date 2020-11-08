@@ -29,10 +29,7 @@
           leave-to-class="opacity-0"
         >
           <div class="fixed inset-0">
-            <div
-              class="absolute inset-0 bg-gray-600 opacity-75"
-              @click="toggleSidebar"
-            ></div>
+            <div class="absolute inset-0 bg-gray-600 opacity-75"></div>
           </div>
         </transition>
         <!--
@@ -60,7 +57,6 @@
               <button
                 class="flex items-center justify-center h-12 w-12 rounded-full focus:outline-none focus:bg-gray-600"
                 aria-label="Close sidebar"
-                @click="toggleSidebar"
               >
                 <svg
                   class="h-6 w-6 text-white"
