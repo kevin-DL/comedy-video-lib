@@ -12,6 +12,12 @@ export default {
       this.$store.commit('auth/setToken', null)
       this.$store.commit('auth/setLoggedIn', false)
     },
+    async login() {
+      const token = await this.$magic.auth.loginWithMagicLink({
+        email: this.email,
+      })
+      this.$store.commit('auth/setToken', token)
+    },
   },
 }
 </script>

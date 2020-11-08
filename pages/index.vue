@@ -1,22 +1,32 @@
 <template>
-  <div class="container">
-    <div>
-      <Logo />
-      <h1 class="title">Comedy Video</h1>
-      <label
-        for="email"
-        class="block text-sm font-medium leading-5 text-gray-700"
-        >Email</label
-      >
-      <div class="mt-1 relative rounded-md shadow-sm">
-        <input
-          id="email"
-          v-model="email"
-          class="form-input block w-full sm:text-sm sm:leading-5"
-          placeholder="you@example.com"
-        />
+  <div>
+    <!-- Page title & actions -->
+    <div
+      class="border-b border-gray-200 px-4 py-4 sm:flex sm:items-center sm:justify-between sm:px-6 lg:px-8"
+    >
+      <div class="flex-1 min-w-0">
+        <h1 class="text-lg font-medium leading-6 text-gray-900 sm:truncate">
+          Home
+        </h1>
       </div>
-      <button @click="login">Login</button>
+      <div class="mt-4 flex sm:mt-0 sm:ml-4">
+        <span class="order-1 ml-3 shadow-sm rounded-md sm:order-0 sm:ml-0">
+          <button
+            type="button"
+            class="inline-flex items-center px-4 py-2 border border-gray-300 text-sm leading-5 font-medium rounded-md text-gray-700 bg-white hover:text-gray-500 focus:outline-none focus:shadow-outline-blue focus:border-blue-300 active:text-gray-800 active:bg-gray-50 transition duration-150 ease-in-out"
+          >
+            Share
+          </button>
+        </span>
+        <span class="order-0 sm:order-1 sm:ml-3 shadow-sm rounded-md">
+          <button
+            type="button"
+            class="inline-flex items-center px-4 py-2 border border-transparent text-sm leading-5 font-medium rounded-md text-white bg-purple-600 hover:bg-purple-500 focus:outline-none focus:shadow-outline-purple focus:border-purple-700 active:bg-indigo-700 transition duration-150 ease-in-out"
+          >
+            Create
+          </button>
+        </span>
+      </div>
     </div>
   </div>
 </template>
@@ -30,51 +40,9 @@ export default {
       loading: false,
     }
   },
-  methods: {
-    async login() {
-      const token = await this.$magic.auth.loginWithMagicLink({
-        email: this.email,
-      })
-      this.$store.commit('auth/setToken', token)
-    },
-  },
+  methods: {},
 }
 </script>
 
 <style>
-/* Sample `apply` at-rules with Tailwind CSS
-.container {
-@apply min-h-screen flex justify-center items-center text-center mx-auto;
-}
-*/
-.container {
-  margin: 0 auto;
-  min-height: 100vh;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  text-align: center;
-}
-
-.title {
-  font-family: 'Quicksand', 'Source Sans Pro', -apple-system, BlinkMacSystemFont,
-    'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
-  display: block;
-  font-weight: 300;
-  font-size: 100px;
-  color: #35495e;
-  letter-spacing: 1px;
-}
-
-.subtitle {
-  font-weight: 300;
-  font-size: 42px;
-  color: #526488;
-  word-spacing: 5px;
-  padding-bottom: 15px;
-}
-
-.links {
-  padding-top: 15px;
-}
 </style>
