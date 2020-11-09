@@ -332,6 +332,7 @@
                       href="#"
                       class="block px-4 py-2 text-sm leading-5 text-gray-700 hover:bg-gray-100 hover:text-gray-900 focus:outline-none focus:bg-gray-100 focus:text-gray-900"
                       role="menuitem"
+                      @click="logout"
                       >Logout</a
                     >
                   </div>
@@ -623,6 +624,7 @@
                         href="#"
                         class="block px-4 py-2 text-sm leading-5 text-gray-700 hover:bg-gray-100 hover:text-gray-900 focus:outline-none focus:bg-gray-100 focus:text-gray-900"
                         role="menuitem"
+                        @click="logout"
                         >Logout</a
                       >
                     </div>
@@ -656,6 +658,8 @@ export default {
     const token = await this.$magic.user.getIdToken()
     this.$store.commit('auth/setToken', token)
     this.$store.commit('auth/setLoggedIn', loggedIn)
+    const d = await this.$api.$get('/api/movies')
+    console.log({ d })
   },
   methods: {
     toggleUserMenu() {
@@ -663,6 +667,11 @@ export default {
     },
     toggleSidebar() {
       this.sidebarToggled = !this.sidebarToggled
+    },
+    async logout() {
+      await this.$magic.user.logout()
+      this.$store.commit('auth/setToken', null)
+      this.$store.commit('auth/setLoggedIn', false)
     },
   },
 }

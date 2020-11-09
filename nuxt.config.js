@@ -17,6 +17,8 @@ export default {
   plugins: [
     { src: '~/plugins/magic.js', mode: 'client' },
     { src: '~/plugins/vue-splide.js', mode: 'client' },
+    { src: '~/plugins/mirage.js', mode: 'client' },
+    { src: '~/plugins/axios.js', mode: 'client' },
   ],
 
   // Auto import components (https://go.nuxtjs.dev/config-components)
@@ -45,5 +47,6 @@ export default {
   build: {},
   env: {
     magicPublicKey: process.env.NUXT_ENV_PUBLIC_MAGIC_KEY,
+    baseApiUrl: process.env.NUXT_ENV_BASE_API_URL,
   },
 }
