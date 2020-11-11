@@ -190,12 +190,13 @@ export default {
       splideOptions: {
         lazyLoad: 'nearby',
         cover: true,
-        type: 'loop',
+        // type: 'loop',
         // padding: {
         //   right: '5rem',
         //   left: '5rem',
         // },
         perPage: 4,
+        perMove: 1,
         // rewind: false,
         breakpoints: {
           640: {

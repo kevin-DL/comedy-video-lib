@@ -216,7 +216,10 @@
         <!-- Sidebar component, swap this element with another sidebar if you like -->
         <div class="h-0 flex-1 flex flex-col overflow-y-auto">
           <!-- User account dropdown -->
-          <div class="px-3 mt-6 relative inline-block text-left">
+          <div
+            v-if="currentUser.isLoggedIn"
+            class="px-3 mt-6 relative inline-block text-left"
+          >
             <!-- Dropdown menu toggle, controlling the show/hide state of dropdown menu. -->
             <div @click="toggleUserMenu">
               <button
@@ -232,7 +235,7 @@
                   >
                     <img
                       class="w-10 h-10 bg-gray-300 rounded-full flex-shrink-0"
-                      src="https://images.unsplash.com/photo-1502685104226-ee32379fefbe?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=3&w=256&h=256&q=80"
+                      :src="currentUser.profile.picture || ''"
                       alt=""
                     />
                     <div class="flex-1 min-w-0">
@@ -340,6 +343,9 @@
               </div>
             </transition>
           </div>
+          <button v-else>
+            <nuxt-link to="/login">Login</nuxt-link>
+          </button>
           <!-- Sidebar Search -->
           <div class="px-3 mt-5">
             <label for="search" class="sr-only">Search</label>
@@ -538,7 +544,7 @@
           </div>
           <div class="flex items-center">
             <!-- Profile dropdown -->
-            <div class="ml-3 relative">
+            <div class="ml-3 relative" v-if="currentUser.isLoggedIn">
               <div>
                 <button
                   class="max-w-xs flex items-center text-sm rounded-full focus:outline-none focus:shadow-outline"
@@ -549,7 +555,7 @@
                 >
                   <img
                     class="h-8 w-8 rounded-full"
-                    src="https://images.unsplash.com/photo-1502685104226-ee32379fefbe?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80"
+                    :src="currentUser.profile.picture || ''"
                     alt=""
                   />
                 </button>
@@ -632,6 +638,9 @@
                 </div>
               </transition>
             </div>
+            <button v-else>
+              <nuxt-link to="/login">Login</nuxt-link>
+            </button>
           </div>
         </div>
       </div>
@@ -653,13 +662,37 @@ export default {
       sidebarToggled: false,
     }
   },
+  computed: {
+    currentUser() {
+      return {
+        isLoggedIn: this.$store.state.auth.loggedIn,
+        token: this.$store.state.auth.token,
+        profile: this.$store.state.auth.profile || {picture: ''},
+      }
+    },
+  },
   async mounted() {
-    const loggedIn = await this.$magic.user.isLoggedIn()
-    const token = await this.$magic.user.getIdToken()
+    const loggedIn = await this.$magic.user.isLoggedIn().catch((error) => {
+      console.error(error)
+      return false
+    })
+    const token = await this.$magic.user.getIdToken().catch((error) => {
+      console.error(error)
+      return null
+    })
+   if (loggedIn) {
+     const profile = await this.$api.$get('/api/profiles/1').catch(err => {
+       console.error(err)
+       return null;
+     })
+     if (profile) {
+       this.$store.commit('auth/setProfile', profile)
+     } else {
+       await this.$router.push('/profile/setup')
+     }
+   }
     this.$store.commit('auth/setToken', token)
     this.$store.commit('auth/setLoggedIn', loggedIn)
-    const d = await this.$api.$get('/api/movies')
-    console.log({ d })
   },
   methods: {
     toggleUserMenu() {
@@ -672,6 +705,12 @@ export default {
       await this.$magic.user.logout()
       this.$store.commit('auth/setToken', null)
       this.$store.commit('auth/setLoggedIn', false)
+    },
+    async login() {
+      const token = await this.$magic.auth.loginWithMagicLink({
+        email: this.email,
+      })
+      this.$store.commit('auth/setToken', token)
     },
   },
 }
