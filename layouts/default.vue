@@ -83,8 +83,8 @@
             <div class="mt-5 flex-1 h-0 overflow-y-auto">
               <nav class="px-2">
                 <div class="space-y-1">
-                  <a
-                    href="#"
+                  <nuxt-link
+                    to="/"
                     class="group flex items-center px-2 py-2 text-base leading-5 font-medium rounded-md text-gray-900 bg-gray-100 hover:text-gray-900 hover:bg-gray-100 focus:bg-gray-200 focus:outline-none transition ease-in-out duration-150"
                   >
                     <!-- Heroicon name: home -->
@@ -103,7 +103,7 @@
                       />
                     </svg>
                     Home
-                  </a>
+                  </nuxt-link>
 
                   <a
                     href="#"
@@ -242,11 +242,11 @@
                       <h2
                         class="text-gray-900 text-sm leading-5 font-medium truncate"
                       >
-                        Jessy Schwarz
+                       {{ currentUser.profile.displayName || 'N/A' }}
                       </h2>
-                      <p class="text-gray-500 text-sm leading-5 truncate">
-                        @jessyschwarz
-                      </p>
+<!--                      <p class="text-gray-500 text-sm leading-5 truncate">-->
+<!--                        @jessyschwarz-->
+<!--                      </p>-->
                     </div>
                   </div>
                   <!-- Heroicon name: selector -->
@@ -295,11 +295,11 @@
                   aria-labelledby="options-menu"
                 >
                   <div class="py-1">
-                    <a
-                      href="#"
+                    <nuxt-link
+                      to="/profile"
                       class="block px-4 py-2 text-sm leading-5 text-gray-700 hover:bg-gray-100 hover:text-gray-900 focus:outline-none focus:bg-gray-100 focus:text-gray-900"
                       role="menuitem"
-                      >View profile</a
+                      >View profile</nuxt-link
                     >
                     <a
                       href="#"
@@ -377,8 +377,8 @@
           <!-- Navigation -->
           <nav class="px-3 mt-6">
             <div class="space-y-1">
-              <a
-                href="#"
+              <nuxt-link
+                to="/"
                 class="group flex items-center px-2 py-2 text-sm leading-5 font-medium rounded-md text-gray-900 bg-gray-200 focus:outline-none focus:bg-gray-50 transition ease-in-out duration-150"
               >
                 <!-- Heroicon name: home -->
@@ -397,7 +397,7 @@
                   />
                 </svg>
                 Home
-              </a>
+              </nuxt-link>
 
               <a
                 href="#"
@@ -590,11 +590,11 @@
                     aria-labelledby="user-menu"
                   >
                     <div class="py-1">
-                      <a
-                        href="#"
+                      <nuxt-link
+                        to="/profile"
                         class="block px-4 py-2 text-sm leading-5 text-gray-700 hover:bg-gray-100 hover:text-gray-900 focus:outline-none focus:bg-gray-100 focus:text-gray-900"
                         role="menuitem"
-                        >View profile</a
+                        >View profile</nuxt-link
                       >
                       <a
                         href="#"
@@ -672,6 +672,7 @@ export default {
     },
   },
   async mounted() {
+    console.log('mounted')
     const loggedIn = await this.$magic.user.isLoggedIn().catch((error) => {
       console.error(error)
       return false
@@ -680,18 +681,23 @@ export default {
       console.error(error)
       return null
     })
+    this.$store.commit('auth/setToken', token)
    if (loggedIn) {
-     const profile = await this.$api.$get('/api/profiles/1').catch(err => {
+     const profile = await this.$api.$get('/profile').catch(err => {
        console.error(err)
        return null;
      })
+
      if (profile) {
-       this.$store.commit('auth/setProfile', profile)
+       this.$store.commit('auth/setProfile', profile.data)
+       const redFrom = this.$store.state.routing.redirectedFrom
+       this.$store.commit('routing/setRedirectedFrom', null)
+       await this.$router.push(redFrom || '/')
      } else {
-       await this.$router.push('/profile/setup')
+       this.$store.commit('auth/setProfile', null)
+       await this.$router.push('/')
      }
    }
-    this.$store.commit('auth/setToken', token)
     this.$store.commit('auth/setLoggedIn', loggedIn)
   },
   methods: {
@@ -705,6 +711,7 @@ export default {
       await this.$magic.user.logout()
       this.$store.commit('auth/setToken', null)
       this.$store.commit('auth/setLoggedIn', false)
+      await this.$router.push('/')
     },
     async login() {
       const token = await this.$magic.auth.loginWithMagicLink({

@@ -14,7 +14,7 @@ export default function ({ $axios, store }, inject) {
   api.onRequest(config => {
     config.headers = {
       ...config.headers,
-      Authorization: store.state.auth.token
+      Authorization: `Bearer ${store.state.auth.token}`
     }
   })
 

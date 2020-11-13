@@ -168,15 +168,16 @@ export default {
       this.$store.commit('auth/setLoggedIn', token !== null)
 
       if (token) {
-        const profile = await this.$api.$get('/api/profiles/1').catch((err) => {
-          console.log(err)
+        const profile = await this.$api.$get('/profile').catch((err) => {
           return null
         })
         if (!profile) {
-          await this.$router.push('/profile/setup')
-        } else {
-          this.$store.commit('auth/setProfile', profile)
           await this.$router.push('/')
+        } else {
+          this.$store.commit('auth/setProfile', profile.data)
+          const redFrom = this.$store.state.routing.redirectedFrom
+          this.$store.commit('routing/setRedirectedFrom', null)
+          await this.$router.push(redFrom || '/')
         }
       }
     },
