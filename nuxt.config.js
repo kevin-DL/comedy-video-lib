@@ -18,7 +18,7 @@ export default {
     { src: '~/plugins/magic.js', mode: 'client' },
     { src: '~/plugins/vue-splide.js', mode: 'client' },
     { src: '~/plugins/mirage.js', mode: 'client' },
-    { src: '~/plugins/axios.js', mode: 'client' },
+    { src: '~/plugins/axios.js' },
   ],
 
   // Auto import components (https://go.nuxtjs.dev/config-components)

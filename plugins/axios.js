@@ -9,6 +9,7 @@ export default function ({ $axios, store }, inject) {
   })
 
   // Set baseURL to something different
+  console.log(process.env.baseApiUrl)
   api.setBaseURL(process.env.baseApiUrl)
 
   api.onRequest(config => {
